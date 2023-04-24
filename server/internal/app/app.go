@@ -54,6 +54,21 @@ func Run() {
 		gin.Logger(),
 		CorsMiddleware,
 	)
+
+	router.POST("/img-generation/message", func(c *gin.Context) {
+		var message MessageResponse
+
+		if err := c.BindJSON(&message); err != nil {
+			fmt.Println(err)
+		}
+
+		res, err := openai.ImgGenerator.NewImg(message.Message)
+		if err != nil {
+			fmt.Print(err)
+		}
+		c.JSON(http.StatusOK, res)
+
+	})
 	router.POST("/text-generation/message", func(c *gin.Context) {
 		var message MessageResponse
 
